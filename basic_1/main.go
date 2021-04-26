@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"time"
 )
 
@@ -55,5 +56,15 @@ func main() {
 		defer fmt.Println("Index is : ", i)
 	}
 	fmt.Println("stop")
+
+	//error handling
+
+	f, err := os.Open("sample_file1.txt")
+	if err != nil {
+		fmt.Println(err)
+		return
+	} else {
+		fmt.Println(f.Name(), " opened successfully")
+	}
 
 }
