@@ -53,11 +53,18 @@ func readFile(fileName string) {
 func removeFile(fileName string) {
 	fmt.Printf("\nremoving file.....%s", fileName)
 
-	err := os.Remove(fileName)
+	if _, err := os.Stat(fileName); !os.IsNotExist(err) {
 
-	if err != nil {
-		fmt.Printf("error while deleting the file %s", err)
+		err := os.Remove(fileName)
+
+		if err != nil {
+			fmt.Printf("error while deleting the file %s", err)
+		}
+
+		fmt.Println("\nfile deleted successfully")
+
+	} else {
+		fmt.Printf("\nNo file named : %s available.", fileName)
 	}
 
-	fmt.Println("\nfile deleted successfully")
 }
