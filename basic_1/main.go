@@ -47,5 +47,13 @@ func main() {
 	default:
 		fmt.Println("It's a weekday and day is :", time.Now().Weekday())
 	}
+	//defer functions
+	fmt.Println("start")
+	for i := 0; i < 5; i++ {
+		//remove defer and see sequential execution
+		//defer executes in LIFO order
+		defer fmt.Println("Index is : ", i)
+	}
+	fmt.Println("stop")
 
 }
