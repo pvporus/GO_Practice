@@ -8,15 +8,16 @@ import (
 )
 
 func main() {
-	createFile()
-	readFile()
-	removeFile()
+	fileName := "test.txt"
+	createFile(fileName)
+	readFile(fileName)
+	removeFile(fileName)
 }
 
-func createFile() {
-	fmt.Println("creating file.....")
+func createFile(fileName string) {
+	fmt.Printf("creating file.....%s", fileName)
 
-	file, err := os.Create("test.txt")
+	file, err := os.Create(fileName)
 
 	if err != nil {
 		log.Fatalf("error creating file %s", err)
@@ -35,10 +36,10 @@ func createFile() {
 
 }
 
-func readFile() {
-	fmt.Println("reading file......")
+func readFile(fileName string) {
+	fmt.Printf("reading file......%s", fileName)
 
-	data, err := ioutil.ReadFile("test.txt")
+	data, err := ioutil.ReadFile(fileName)
 
 	if err != nil {
 		log.Fatalf("error while reading file %s", err)
@@ -49,10 +50,10 @@ func readFile() {
 	fmt.Printf("\ndata in file is : %s ", data)
 }
 
-func removeFile() {
-	fmt.Println("\nremoving file.....")
+func removeFile(fileName string) {
+	fmt.Printf("\nremoving file.....%s", fileName)
 
-	err := os.Remove("test.txt")
+	err := os.Remove(fileName)
 
 	if err != nil {
 		fmt.Printf("error while deleting the file %s", err)
