@@ -1,4 +1,4 @@
-module github.com/pvporus/go_rest
+module github.com/pvporus/GO_Practice/go_rest
 
 go 1.16
 
