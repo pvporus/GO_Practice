@@ -1,0 +1,4 @@
+ database: "booksDB"
+ user: "postgres"
+ password: "root"
+ host: "localhost:8080"
