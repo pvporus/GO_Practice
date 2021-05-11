@@ -10,14 +10,11 @@ import (
 func main() {
 
 	//NOTE:cert and key files geenrated through OpenSSL
-	//Simple TLS Server with http
-	httpsService()
-	//TLS server with http.Server struct
-	/*serverStructService()*/
-	//TLS server with http.Server struct and TLSConfig struct
-	/*serverStructTLSConfigService()*/
+	serverStructTLSConfigService()
 
 }
+
+//HTTPS using TLS API
 func httpsService() {
 	http.HandleFunc("/", func(rw http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(rw, "Hi Golang, how are you doing?")
@@ -26,6 +23,7 @@ func httpsService() {
 	log.Fatal(http.ListenAndServeTLS(":9004", "localhost.crt", "localhost.key", nil))
 }
 
+//HTTPS using Server struct
 func serverStructService() {
 	serverStruct := &http.Server{
 		Addr:    ":9004",
@@ -39,6 +37,7 @@ func serverStructService() {
 
 }
 
+//HTTPS using Server Struct and TLSConfig struct
 func serverStructTLSConfigService() {
 
 	cert, err := tls.LoadX509KeyPair("localhost.crt", "localhost.key")
