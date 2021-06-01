@@ -28,7 +28,7 @@ func (server *Server) Login(w http.ResponseWriter, r *http.Request) {
 	}
 
 	user.Prepare()
-	err = user.Validate("login")
+	err = user.Validate()
 	if err != nil {
 		responses.ERROR(w, http.StatusUnprocessableEntity, err)
 		return
