@@ -28,6 +28,6 @@ func Run() {
 
 	bootstrapping.Load(server.DB)
 
-	server.Run(":8081")
+	server.Run(os.Getenv("APP_PORT"))
 
 }
