@@ -15,7 +15,8 @@ var server = controllers.Server{}
 
 //Run the http server to listen and serve the requests based on the routs
 func Run() {
-
+	//Close the DB once done
+	defer server.DB.Close()
 	var err error
 	err = godotenv.Load()
 	if err != nil {

@@ -1,13 +1,14 @@
 package models
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 	"html"
-	"log"
 	"strings"
 	"time"
 
-	"github.com/badoux/checkmail"
+	"github.com/go-playground/validator/v10"
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -16,8 +17,8 @@ import (
 type User struct {
 	ID        uint32    `gorm:"primary_key;auto_increment" json:"id"`
 	Nickname  string    `gorm:"size:255;not null;unique" json:"nickname"`
-	Email     string    `gorm:"size:100;not null;unique" json:"email"`
-	Password  string    `gorm:"size:100;not null;" json:"password"`
+	Email     string    `gorm:"size:100;not null;unique" json:"email" uservalidation:"required,email"`
+	Password  string    `gorm:"size:100;not null;" json:"password" uservalidation:"required"`
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
@@ -52,57 +53,31 @@ func (u *User) Prepare() {
 }
 
 //Validate required fields
-func (u *User) Validate(action string) error {
-	switch strings.ToLower(action) {
-	case "update":
-		if u.Nickname == "" {
-			return errors.New("Required Nickname")
+func (u *User) Validate() error {
+	validationErrors := make(map[string]string)
+	v := validator.New()
+	v.SetTagName("uservalidation")
+	if err := v.Struct(u); err != nil {
+		for _, err := range err.(validator.ValidationErrors) {
+			if err.Tag() == "email" {
+				validationErrors[strings.ToLower(err.Field())] = "Invalid E-mail format."
+				continue
+			}
+			validationErrors[strings.ToLower(err.Field())] = fmt.Sprintf("%s is %s %s", err.Field(), err.Tag(), err.Param())
 		}
-		if u.Password == "" {
-			return errors.New("Required Password")
+		errData, err := json.Marshal(validationErrors)
+		if err != nil {
+			return errors.New(err.Error())
 		}
-		if u.Email == "" {
-			return errors.New("Rrequired Email")
-		}
-		if err := checkmail.ValidateFormat(u.Email); err != nil {
-			return errors.New("Invalid Email")
-		}
-
-		return nil
-	case "login":
-		if u.Password == "" {
-			return errors.New("Required Password")
-		}
-		if u.Email == "" {
-			return errors.New("Required Email")
-		}
-		if err := checkmail.ValidateFormat(u.Email); err != nil {
-			return errors.New("Invalid Email")
-		}
-		return nil
-
-	default:
-		if u.Nickname == "" {
-			return errors.New("Required Nickname")
-		}
-		if u.Password == "" {
-			return errors.New("Required Password")
-		}
-		if u.Email == "" {
-			return errors.New("Required Email")
-		}
-		if err := checkmail.ValidateFormat(u.Email); err != nil {
-			return errors.New("Invalid Email")
-		}
-		return nil
+		jsonStr := string(errData)
+		return errors.New(jsonStr)
 	}
+	return nil
 }
 
 //Save the user details
 func (u *User) SaveUser(db *gorm.DB) (*User, error) {
-
-	var err error
-	err = db.Debug().Create(&u).Error
+	var err = db.Debug().Create(&u).Error
 	if err != nil {
 		return &User{}, err
 	}
@@ -122,8 +97,7 @@ func (u *User) FindAllUsers(db *gorm.DB) (*[]User, error) {
 
 //Get the user details by user id
 func (u *User) FindUserByID(db *gorm.DB, uid uint32) (*User, error) {
-	var err error
-	err = db.Debug().Model(User{}).Where("id = ?", uid).Take(&u).Error
+	var err = db.Debug().Model(User{}).Where("id = ?", uid).Take(&u).Error
 	if err != nil {
 		return &User{}, err
 	}
@@ -136,24 +110,19 @@ func (u *User) FindUserByID(db *gorm.DB, uid uint32) (*User, error) {
 //Update user details
 func (u *User) UpdateAUser(db *gorm.DB, uid uint32) (*User, error) {
 
-	// To hash the password
-	err := u.SetPasswordHash()
-	if err != nil {
-		log.Fatal(err)
-	}
 	db = db.Debug().Model(&User{}).Where("id = ?", uid).Take(&User{}).UpdateColumns(
 		map[string]interface{}{
-			"password":  u.Password,
-			"nickname":  u.Nickname,
-			"email":     u.Email,
-			"update_at": time.Now(),
+			"password":   u.Password,
+			"nickname":   u.Nickname,
+			"email":      u.Email,
+			"updated_at": time.Now(),
 		},
 	)
 	if db.Error != nil {
 		return &User{}, db.Error
 	}
 	// This is the display the updated user
-	err = db.Debug().Model(&User{}).Where("id = ?", uid).Take(&u).Error
+	err := db.Debug().Model(&User{}).Where("id = ?", uid).Take(&u).Error
 	if err != nil {
 		return &User{}, err
 	}

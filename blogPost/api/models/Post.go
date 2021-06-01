@@ -1,21 +1,24 @@
 package models
 
 import (
+	"encoding/json"
 	"errors"
+	"fmt"
 	"html"
 	"strings"
 	"time"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/jinzhu/gorm"
 )
 
 //Post model
 type Post struct {
 	ID        uint64    `gorm:"primary_key;auto_increment" json:"id"`
-	Title     string    `gorm:"size:255;not null;unique" json:"title"`
-	Content   string    `gorm:"size:255;not null;" json:"content"`
+	Title     string    `gorm:"size:255;not null;unique" json:"title" validate:"required"`
+	Content   string    `gorm:"size:255;not null;" json:"content" validate:"required"`
 	Author    User      `json:"author"`
-	AuthorID  uint32    `gorm:"not null" json:"author_id"`
+	AuthorID  uint32    `gorm:"not null" json:"author_id" validate:"authIdValidator"`
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
@@ -32,15 +35,21 @@ func (p *Post) Prepare() {
 
 //Validate the Post object
 func (p *Post) Validate() error {
-
-	if p.Title == "" {
-		return errors.New("Required Title")
-	}
-	if p.Content == "" {
-		return errors.New("Required Content")
-	}
-	if p.AuthorID < 1 {
-		return errors.New("Required Author")
+	validationErrors := make(map[string]string)
+	v := validator.New()
+	_ = v.RegisterValidation("authIdValidator", func(fl validator.FieldLevel) bool {
+		return fl.Field().Uint() > 0
+	})
+	if err := v.Struct(p); err != nil {
+		for _, err := range err.(validator.ValidationErrors) {
+			validationErrors[strings.ToLower(err.Field())] = fmt.Sprintf("%s is %s %s", err.Field(), err.Tag(), err.Param())
+		}
+		errData, err := json.Marshal(validationErrors)
+		if err != nil {
+			return errors.New(err.Error())
+		}
+		jsonStr := string(errData)
+		return errors.New(jsonStr)
 	}
 	return nil
 }

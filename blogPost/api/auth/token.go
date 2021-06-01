@@ -2,6 +2,7 @@ package auth
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -38,6 +39,8 @@ func ValidToken(r *http.Request) error {
 	}
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
 		Pretty(claims)
+	} else {
+		return errors.New("Invalid token")
 	}
 	return nil
 }
