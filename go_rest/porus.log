@@ -1,0 +1,22 @@
+{"level":"info","ts":1621356996.3562794,"caller":"go_rest/main.go:30","msg":"Reading from config : database booksDB, user postgres, password root"}
+{"level":"info","ts":1621356996.3568025,"caller":"go_rest/main.go:32","msg":"Initialization completed..."}
+{"level":"info","ts":1622896660.0049546,"caller":"go_rest/main.go:29","msg":"Reading from config : database booksDB, user postgres, password root"}
+{"level":"info","ts":1622896660.0055473,"caller":"go_rest/main.go:31","msg":"Initialization completed..."}
+{"level":"info","ts":1622897065.809558,"caller":"go_rest/main.go:29","msg":"Reading from config : database booksDB, user postgres, password root"}
+{"level":"info","ts":1622897065.810073,"caller":"go_rest/main.go:31","msg":"Initialization completed..."}
+{"level":"info","ts":1622897875.7968147,"caller":"go_rest/main.go:29","msg":"Reading from config : database booksDB, user postgres, password root"}
+{"level":"info","ts":1622897875.7968147,"caller":"go_rest/main.go:31","msg":"Initialization completed..."}
+{"level":"info","ts":1622898330.326397,"caller":"go_rest/main.go:29","msg":"Reading from config : database booksDB, user postgres, password root"}
+{"level":"info","ts":1622898330.3264294,"caller":"go_rest/main.go:31","msg":"Initialization completed..."}
+{"level":"info","ts":1622898438.0180533,"caller":"go_rest/main.go:31","msg":"Reading from config : database booksDB, user postgres, password root"}
+{"level":"info","ts":1622898438.0180533,"caller":"go_rest/main.go:33","msg":"Initialization completed..."}
+{"level":"info","ts":1622898752.9106655,"caller":"go_rest/main.go:31","msg":"Reading from config : database booksDB, user postgres, password root"}
+{"level":"info","ts":1622898752.911198,"caller":"go_rest/main.go:33","msg":"Initialization completed..."}
+{"level":"info","ts":1622899568.935258,"caller":"go_rest/main.go:31","msg":"Reading from config : database booksDB, user postgres, password root"}
+{"level":"info","ts":1622899568.9358222,"caller":"go_rest/main.go:33","msg":"Initialization completed..."}
+{"level":"info","ts":1622899578.5547066,"caller":"go_rest/main.go:31","msg":"Reading from config : database booksDB, user postgres, password root"}
+{"level":"info","ts":1622899578.5552807,"caller":"go_rest/main.go:33","msg":"Initialization completed..."}
+{"level":"info","ts":1622900402.1805537,"caller":"go_rest/main.go:31","msg":"Reading from config : database booksDB, user postgres, password root"}
+{"level":"info","ts":1622900402.1810727,"caller":"go_rest/main.go:33","msg":"Initialization completed..."}
+{"level":"info","ts":1622900623.1137738,"caller":"go_rest/main.go:31","msg":"Reading from config : database booksDB, user postgres, password root"}
+{"level":"info","ts":1622900623.114332,"caller":"go_rest/main.go:33","msg":"Initialization completed..."}

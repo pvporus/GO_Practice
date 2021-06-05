@@ -13,6 +13,10 @@ import (
 
 var a App
 
+//go test -bench=. -benchmem
+//go test -bench -run=XXX -cpuprofile cpu.prof .
+//go tool pprof cpu.prof
+
 func TestMain(m *testing.M) {
 	a = App{}
 	a.Initialize("booksDB", "postgres", "root")
@@ -182,4 +186,46 @@ func TestDeleteBook(t *testing.T) {
 	req, _ = http.NewRequest("GET", "/book/1", nil)
 	response = executeRequest(req)
 	getkResponseCode(t, http.StatusNotFound, response.Code)
+}
+
+func BenchmarkGetBooks(b *testing.B) {
+	r := httptest.NewRequest("GET", "/books", nil)
+	for i := 0; i < b.N; i++ {
+		w := httptest.NewRecorder()
+		a.getBooks(w, r)
+	}
+}
+
+func BenchmarkGetBookById(b *testing.B) {
+	r, _ := http.NewRequest("GET", "/book/1", nil)
+	for i := 0; i < b.N; i++ {
+		w := httptest.NewRecorder()
+		a.getBook(w, r)
+	}
+}
+func BenchmarkAddBook(b *testing.B) {
+	var jsonStr = []byte(`{"title":"test book", "category":"test category", "autho":"author1", "price": 200.50}`)
+	r, _ := http.NewRequest("POST", "/book", bytes.NewBuffer(jsonStr))
+	r.Header.Set("Content-Type", "application/json")
+	for i := 0; i < b.N; i++ {
+		w := httptest.NewRecorder()
+		a.getBooks(w, r)
+	}
+}
+func BenchmarkUpdateBook(b *testing.B) {
+	var jsonStr = []byte(`{"title":"test book updated title", "category":"test category updated", "author":"test author updated ", "price": 300.70}`)
+	r, _ := http.NewRequest("PUT", "/book/1", bytes.NewBuffer(jsonStr))
+	r.Header.Set("Content-Type", "application/json")
+	for i := 0; i < b.N; i++ {
+		w := httptest.NewRecorder()
+		a.updateBook(w, r)
+	}
+}
+
+func BenchmarkDeleteBook(b *testing.B) {
+	r, _ := http.NewRequest("DELETE", "/book/1", nil)
+	for i := 0; i < b.N; i++ {
+		w := httptest.NewRecorder()
+		a.deleteBook(w, r)
+	}
 }

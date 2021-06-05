@@ -148,11 +148,3 @@ func (a *App) deleteBook(w http.ResponseWriter, r *http.Request) {
 
 	getJSONResponse(w, http.StatusOK, map[string]string{"result": "success"})
 }
-
-func (a *App) mapRoutes() {
-	a.Router.HandleFunc("/books", a.getBooks).Methods("GET")
-	a.Router.HandleFunc("/book", a.addBook).Methods("POST")
-	a.Router.HandleFunc("/book/{id:[0-9]+}", a.getBook).Methods("GET")
-	a.Router.HandleFunc("/book/{id:[0-9]+}", a.updateBook).Methods("PUT")
-	a.Router.HandleFunc("/book/{id:[0-9]+}", a.deleteBook).Methods("DELETE")
-}
