@@ -8,22 +8,15 @@ import (
 	"go.uber.org/zap"
 )
 
+var logger *zap.Logger
+
 func main() {
-	config := zap.NewProductionConfig()
-	config.OutputPaths = []string{"porus.log"}
-	logger, err := config.Build()
-
-	if err != nil {
-		log.Fatalf("can't initialize zap logger: %v", err)
-	}
 	defer logger.Sync()
+	//Initialize Viper config
+	initializeConfig()
 
-	viper.SetConfigName("config")
-	viper.AddConfigPath(".")
-
-	if err := viper.ReadInConfig(); err != nil {
-		log.Fatalf("Error reading config file, %s", err)
-	}
+	//Zap looger initialization
+	logger = getLogger()
 
 	a := App{}
 
@@ -32,4 +25,22 @@ func main() {
 	logger.Info("Initialization completed...")
 	a.Run(viper.GetString("host"))
 
+}
+
+func getLogger() *zap.Logger {
+	config := zap.NewProductionConfig()
+	config.OutputPaths = []string{viper.GetString("logfile")}
+	logger, err := config.Build()
+	if err != nil {
+		log.Fatalf("can't initialize zap logger: %v", err)
+	}
+	return logger
+}
+
+func initializeConfig() {
+	viper.SetConfigName("config")
+	viper.AddConfigPath(".")
+	if err := viper.ReadInConfig(); err != nil {
+		log.Fatalf("Error reading config file, %s", err)
+	}
 }

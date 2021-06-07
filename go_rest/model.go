@@ -1,9 +1,8 @@
 package main
 
-import (
-	"database/sql"
-)
+import "database/sql"
 
+//Book model struct
 type book struct {
 	ID       int     `json:"id"`
 	Title    string  `json:"title"`
@@ -12,11 +11,13 @@ type book struct {
 	Price    float64 `json:"price"`
 }
 
+//Get teh book by Id
 func (b *book) getBook(db *sql.DB) error {
 	return db.QueryRow("SELECT title, category, author, price FROM books WHERE id=$1",
 		b.ID).Scan(&b.Title, &b.Category, &b.Author, &b.Price)
 }
 
+//Update the book by ID
 func (b *book) updateBook(db *sql.DB) error {
 	_, err :=
 		db.Exec("UPDATE books SET title=$1, category=$2, author=$3, price=$4 WHERE id=$5",
@@ -25,12 +26,14 @@ func (b *book) updateBook(db *sql.DB) error {
 	return err
 }
 
+//Delete the book by Id
 func (b *book) deleteBook(db *sql.DB) error {
 	_, err := db.Exec("DELETE FROM books WHERE id=$1", b.ID)
 
 	return err
 }
 
+//Add the new book
 func (b *book) addBook(db *sql.DB) error {
 	err := db.QueryRow(
 		"INSERT INTO books(title, category, author, price) VALUES($1, $2, $3, $4) RETURNING id",
@@ -43,6 +46,7 @@ func (b *book) addBook(db *sql.DB) error {
 	return nil
 }
 
+//Get all the books
 func getBooks(db *sql.DB, start, count int) ([]book, error) {
 	rows, err := db.Query(
 		"SELECT id, title, category, author,  price FROM books LIMIT $1 OFFSET $2",

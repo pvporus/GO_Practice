@@ -1,4 +1,5 @@
  database: "booksDB"
  user: "postgres"
  password: "root"
- host: "localhost:8080"
+ host: "localhost:8088"
+ logfile: "porus.log"
