@@ -1,0 +1,4 @@
+docker run -v C:/GO_Practice/blogPost/migrations:/migrations --network host migrate/migrate -path=/migrations/ -database  'postgres://postgres:root@host.docker.internal:5432/blogPostMig?sslmode=disable' up
+
+
+PS C:\GO_Practice\blogPost\migrator> docker run  --network host migrator -path=/migrations/ -database  'postgres://postgres:root@host.docker.internal:5432/blogPostMig?sslmode=disable' up    

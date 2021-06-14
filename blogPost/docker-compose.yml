@@ -34,6 +34,6 @@ services:
     environment:
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "root"
-      POSTGRES_DB: "blogPost"
+      POSTGRES_DB: "blogPostMig"
       TZ: 'UTC'
       PGTZ: 'UTC'
