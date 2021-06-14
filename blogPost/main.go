@@ -1,6 +1,9 @@
 package main
 
-import "blogPost/api"
+import (
+	"blogPost/api"
+	_ "net/http/pprof"
+)
 
 func main() {
 	api.Run()
