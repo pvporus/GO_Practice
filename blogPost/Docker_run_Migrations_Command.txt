@@ -1,4 +1,14 @@
+//To run the service
+docker compose up
+
+//to run migrations with golang CLI from docker hub directly
 docker run -v C:/GO_Practice/blogPost/migrations:/migrations --network host migrate/migrate -path=/migrations/ -database  'postgres://postgres:root@host.docker.internal:5432/blogPostMig?sslmode=disable' up
 
+//build Docker file with golang migrate/migrate CLI
+docker build -t migrator .
 
+//to run migrations with golang migration CLI from Dockerfile locally
 PS C:\GO_Practice\blogPost\migrator> docker run  --network host migrator -path=/migrations/ -database  'postgres://postgres:root@host.docker.internal:5432/blogPostMig?sslmode=disable' up    
+
+
+
